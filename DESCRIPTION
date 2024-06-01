@@ -1,0 +1,22 @@
+Package: metastat
+Title: Analysis and Visualization of Metabolomics Data
+Version: 0.1.0
+Authors@R: c(
+    person("Shiying", "Xiao", email = "shiying.xiao@outlook.com",
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-8846-3258")),
+    person("Timothy", "Moore", email = "timothy.e.moore@uconn.edu",
+           role = "aut", comment = c(ORCID = "0000-0002-9576-0517")))
+Maintainer: Shiying Xiao <shiying.xiao@outlook.com>
+Description: Offers simple tools to manipulate and investigate metabolomics data.
+License: GPL-3 + file LICENSE
+Imports: 
+    dplyr,
+    ggplot2,
+    tidyr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
+Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
+    "roxyglobals::global_roclet"))
+Config/roxyglobals/filename: globals.R
+Config/roxyglobals/unique: FALSE
