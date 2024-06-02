@@ -33,8 +33,8 @@
 #'
 #' @export
 
-preprocessing <- function(fileName, dataSet = NULL,
-                          names = c("gender", "treatment", "replicate")) {
+preprocess <- function(fileName, dataSet = NULL,
+                       names = c("gender", "treatment", "replicate")) {
   if (missing(fileName)) {
     if (is.null(dataSet)) {
       stop("Either 'fileName' or 'dataSet' must be provided.")
