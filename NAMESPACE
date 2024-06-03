@@ -2,6 +2,7 @@
 
 export(preprocess)
 export(scale)
+export(transform)
 import(dplyr)
 import(ggplot2)
 import(tidyr)
