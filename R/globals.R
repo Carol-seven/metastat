@@ -3,6 +3,8 @@
 utils::globalVariables(c(
   "Mean", # <meanVarPlot>
   "Variance", # <meanVarPlot>
+  "attribute", # <normPlot>
+  "value", # <normPlot>
   "Compound", # <preprocess>
   "name", # <preprocess>
   NULL

@@ -1,33 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/404.html</loc>
-  </url>
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/index.html</loc>
-  </url>
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/reference/center.html</loc>
-  </url>
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/reference/preprocess.html</loc>
-  </url>
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/reference/preprocessing.html</loc>
-  </url>
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/reference/scale.html</loc>
-  </url>
-  <url>
-    <loc>https://uconn-scs.github.io/metastat/reference/transform.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://uconn-scs.github.io/metastat/404.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/LICENSE-text.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/authors.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/index.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/center.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/index.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/normalize.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/preprocess.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/preprocessing.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/scale.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/transform.html</loc></url>
 </urlset>
+

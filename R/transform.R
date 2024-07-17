@@ -33,8 +33,6 @@
 #'
 #' @returns The transformed data.
 #'
-#' @autoglobal
-#'
 #' @export
 
 transform <- function(dataSet,
@@ -43,7 +41,7 @@ transform <- function(dataSet,
 
   ## organize the data for transformation
   dataPoints <- dataSet %>%
-    select(-names)
+    select(-any_of(names))
 
   ## calculate and plot a mean-variance plot
   plotPre <- meanVarPlot(dataPoints, title = "Pre-Transformation")

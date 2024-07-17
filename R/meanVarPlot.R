@@ -2,7 +2,7 @@
 #' Plotting a graph of mean versus variance
 #'
 #' @description
-#' Take a set of metabolics data organized by column, calculate the mean and variance of
+#' Take a set of metabolomics data organized by column, calculate the mean and variance of
 #' each column, and then plot those statistics.
 #'
 #' @param datMV A data frame containing the data signals.

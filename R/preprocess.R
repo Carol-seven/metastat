@@ -53,17 +53,19 @@ preprocess <- function(fileName, dataSet = NULL,
   result <- dataSet.l %>%
     pivot_wider(id_cols = name, names_from = Compound, values_from = value) %>%
     separate(name, into = names, sep = "_") %>%
+    mutate(replicate = factor(replicate, levels = sort(as.numeric(unique(replicate))))) %>%
     as.data.frame()
 
   ## generate a histogram of the log2-transformed values for full raw data set
   value <- data.frame(value = log2(dataSet.l$value))
   plot <- ggplot(value) +
     geom_histogram(aes(x = value),
-                   breaks = seq(floor(min(value, na.rm = TRUE)),
-                                ceiling(max(value, na.rm = TRUE)), 1),
+                   binwidth = 2,
+                   # breaks = seq(floor(min(value, na.rm = TRUE)),
+                   #              ceiling(max(value, na.rm = TRUE)), 1),
                    color = "black", fill = "gray") +
-    scale_x_continuous(breaks = seq(floor(min(value, na.rm = TRUE)),
-                                    ceiling(max(value, na.rm = TRUE)), 2)) +
+    # scale_x_continuous(breaks = seq(floor(min(value, na.rm = TRUE)),
+    #                                 ceiling(max(value, na.rm = TRUE)), 2)) +
     labs(title = "Histogram of Full Raw Data Set",
          x = expression("log"[2]*"(Data)"), y = "Frequency") +
     theme_bw() +
@@ -71,7 +73,7 @@ preprocess <- function(fileName, dataSet = NULL,
   print(plot)
 
   ## print summary statistics for full raw data set
-  cat("Summary of Full Data Signals (Raw):\n")
+  cat("\nSummary of Full Data Signals (Raw):\n")
   print(summary(dataSet.l$value))
   cat("\n")
 
