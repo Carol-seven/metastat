@@ -40,8 +40,7 @@ transform <- function(dataSet,
                       method = "log", logFold = 2, root = 2) {
 
   ## organize the data for transformation
-  dataPoints <- dataSet %>%
-    select(-any_of(names))
+  dataPoints <- select(dataSet, -any_of(names))
 
   ## calculate and plot a mean-variance plot
   plotPre <- meanVarPlot(dataPoints, title = "Pre-Transformation")

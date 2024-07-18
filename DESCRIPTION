@@ -10,14 +10,22 @@ Maintainer: Shiying Xiao <shiying.xiao@outlook.com>
 Description: Offers simple tools to manipulate and investigate metabolomics data.
 License: GPL-3 + file LICENSE
 Imports: 
+    Rdpack,
     dplyr,
     ggplot2,
+    impute,
     limma,
+    mice,
+    multiUS,
+    pcaMethods,
+    softImpute,
     tidyr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
     "roxyglobals::global_roclet"))
+biocViews: impute, limma, pcaMethods
+RdMacros: Rdpack
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE

@@ -4,6 +4,16 @@
 <url><loc>https://uconn-scs.github.io/metastat/authors.html</loc></url>
 <url><loc>https://uconn-scs.github.io/metastat/index.html</loc></url>
 <url><loc>https://uconn-scs.github.io/metastat/reference/center.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.knn.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.knn_seq.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.knn_trunc.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.mice_cart.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.mice_norm.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.min_global.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.min_local.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.nuc_norm.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.pca_bayes.html</loc></url>
+<url><loc>https://uconn-scs.github.io/metastat/reference/impute.pca_prob.html</loc></url>
 <url><loc>https://uconn-scs.github.io/metastat/reference/index.html</loc></url>
 <url><loc>https://uconn-scs.github.io/metastat/reference/normalize.html</loc></url>
 <url><loc>https://uconn-scs.github.io/metastat/reference/preprocess.html</loc></url>
