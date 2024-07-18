@@ -9,7 +9,7 @@
 #'
 #' @param dataSet The raw data set, if already loaded in R.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
+#' @param attrnames A vector of strings (default = c("gender", "treatment", "replicate"))
 #' specifying the names of the attribute columns.
 #'
 #' @details
@@ -34,7 +34,7 @@
 #' @export
 
 preprocess <- function(fileName, dataSet = NULL,
-                       names = c("gender", "treatment", "replicate")) {
+                       attrnames = c("gender", "treatment", "replicate")) {
   if (missing(fileName)) {
     if (is.null(dataSet)) {
       stop("Either 'fileName' or 'dataSet' must be provided.")
@@ -52,7 +52,7 @@ preprocess <- function(fileName, dataSet = NULL,
   ## reformatted data
   result <- dataSet.l %>%
     pivot_wider(id_cols = name, names_from = Compound, values_from = value) %>%
-    separate(name, into = names, sep = "_") %>%
+    separate(name, into = attrnames, sep = "_") %>%
     mutate(replicate = factor(replicate, levels = sort(as.numeric(unique(replicate))))) %>%
     as.data.frame()
 
@@ -78,11 +78,13 @@ preprocess <- function(fileName, dataSet = NULL,
   cat("\n")
 
   ## print levels of attributes
-  for (k in 1:length(names)) {
-    cat(paste0("Levels of ", names[k], ":"),
-        eval(parse(text = paste0("unique(result$", names[k], ")"))), "\n")
+  for (k in 1:length(attrnames)) {
+    cat(paste0("Levels of ", attrnames[k], ":"),
+        eval(parse(text = paste0("unique(result$", attrnames[k], ")"))), "\n")
   }
   cat("\n")
+
+  attr(result, "attrnames") <- attrnames
 
   return(result)
 }

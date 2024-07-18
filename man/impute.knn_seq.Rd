@@ -4,13 +4,10 @@
 \alias{impute.knn_seq}
 \title{Imputation by the k-nearest neighbors algorithm}
 \usage{
-impute.knn_seq(dataSet, names = c("gender", "treatment", "replicate"), k = 10)
+impute.knn_seq(dataSet, k = 10)
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 
 \item{k}{An integer (default = 10) indicating the number of neighbors to be used in the
 imputation.}

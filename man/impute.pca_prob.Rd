@@ -4,19 +4,10 @@
 \alias{impute.pca_prob}
 \title{Imputation by probabilistic principal components analysis}
 \usage{
-impute.pca_prob(
-  dataSet,
-  names = c("gender", "treatment", "replicate"),
-  nPcs = NULL,
-  maxIterations = 1000,
-  seed = 362436069
-)
+impute.pca_prob(dataSet, nPcs = NULL, maxIterations = 1000, seed = 362436069)
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 
 \item{nPcs}{An integer specifying the number of principal components to calculate. The
 default is set to the minimum between the number of samples and the number of proteins.}

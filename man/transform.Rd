@@ -4,19 +4,10 @@
 \alias{transform}
 \title{Transformation}
 \usage{
-transform(
-  dataSet,
-  names = c("gender", "treatment", "replicate"),
-  method = "log",
-  logFold = 2,
-  root = 2
-)
+transform(dataSet, method = "log", logFold = 2, root = 2)
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 
 \item{method}{A string (default = "log") specifying the method to be used for the
 transformation:

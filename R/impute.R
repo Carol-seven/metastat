@@ -7,25 +7,25 @@
 #'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
-#'
 #' @import dplyr
 #'
 #' @return The imputed data.
 #'
 #' @export
 
-impute.min_global <- function(dataSet, names = c("gender", "treatment", "replicate")) {
+impute.min_global <- function(dataSet) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## replace all NAs with the global smallest value in the data set
   dataPoints <- replace(dataPoints, is.na(dataPoints), min(dataPoints, na.rm = TRUE))
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
@@ -42,9 +42,6 @@ impute.min_global <- function(dataSet, names = c("gender", "treatment", "replica
 #'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
-#'
 #' @param reqPercentPresent A scalar (default = 0.51) specifying the required percent of
 #' values that must be present in a given compound by condition combination for values to
 #' be imputed.
@@ -57,14 +54,15 @@ impute.min_global <- function(dataSet, names = c("gender", "treatment", "replica
 #'
 #' @export
 
-impute.min_local <- function(dataSet, names = c("gender", "treatment", "replicate"),
-                             reqPercentPresent = 0.51) {
+impute.min_local <- function(dataSet, reqPercentPresent = 0.51) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   dataSet <- dataSet %>%
-    unite("condition", all_of(setdiff(names, "replicate")), sep = "_", remove = FALSE)
+    unite("condition", all_of(setdiff(attrnames, "replicate")), sep = "_", remove = FALSE)
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(c(names, "condition")))
+  dataPoints <- select(dataSet, -any_of(c(attrnames, "condition")))
 
   ## create a frequency table for conditions
   frq <- count(dataSet, condition)
@@ -100,7 +98,8 @@ impute.min_local <- function(dataSet, names = c("gender", "treatment", "replicat
   }
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
@@ -116,9 +115,6 @@ impute.min_local <- function(dataSet, names = c("gender", "treatment", "replicat
 #' \insertCite{troyanskaya2001missing}{metastat}.
 #'
 #' @param dataSet A data frame containing the data signals.
-#'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
 #'
 #' @param k An integer (default = 10) indicating the number of neighbors to be used in the
 #' imputation.
@@ -149,11 +145,12 @@ impute.min_local <- function(dataSet, names = c("gender", "treatment", "replicat
 #'
 #' @export
 
-impute.knn <- function(dataSet, names = c("gender", "treatment", "replicate"),
-                       k = 10, rowmax = 0.5, colmax = 0.8, maxp = 1500, seed = 362436069) {
+impute.knn <- function(dataSet, k = 10, rowmax = 0.5, colmax = 0.8, maxp = 1500, seed = 362436069) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## replace NAs using knn algorithm
   dataPoints <- t(impute::impute.knn(t(dataPoints), k = k,
@@ -161,7 +158,8 @@ impute.knn <- function(dataSet, names = c("gender", "treatment", "replicate"),
                                      maxp = maxp, rng.seed = seed)$data)
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
@@ -178,9 +176,6 @@ impute.knn <- function(dataSet, names = c("gender", "treatment", "replicate"),
 #'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
-#'
 #' @param k An integer (default = 10) indicating the number of neighbors to be used in the
 #' imputation.
 #'
@@ -194,17 +189,19 @@ impute.knn <- function(dataSet, names = c("gender", "treatment", "replicate"),
 #'
 #' @export
 
-impute.knn_seq <- function(dataSet, names = c("gender", "treatment", "replicate"),
-                           k = 10) {
+impute.knn_seq <- function(dataSet, k = 10) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## replace NAs using sequential knn algorithm
   dataPoints <- t(multiUS::seqKNNimp(t(dataPoints), k = k))
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
@@ -221,9 +218,6 @@ impute.knn_seq <- function(dataSet, names = c("gender", "treatment", "replicate"
 #'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
-#'
 #' @param k An integer (default = 10) indicating the number of neighbors to be used in the
 #' imputation.
 #'
@@ -236,11 +230,12 @@ impute.knn_seq <- function(dataSet, names = c("gender", "treatment", "replicate"
 #'
 #' @export
 
-impute.knn_trunc <- function(dataSet, names = c("gender", "treatment", "replicate"),
-                             k = 10) {
+impute.knn_trunc <- function(dataSet, k = 10) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## replace NAs using truncated knn algorithm
   ## source: trunc-knn.R
@@ -248,7 +243,8 @@ impute.knn_trunc <- function(dataSet, names = c("gender", "treatment", "replicat
                           distance = "truncation", perc = 0)
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
@@ -264,9 +260,6 @@ impute.knn_trunc <- function(dataSet, names = c("gender", "treatment", "replicat
 #' \insertCite{hastie2015matrix}{metastat}.
 #'
 #' @param dataSet A data frame containing the data signals.
-#'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
 #'
 #' @param rank.max An integer specifying the restriction on the rank of the solution. The
 #' default is set to one less than the minimum dimension of the dataset.
@@ -299,12 +292,14 @@ impute.knn_trunc <- function(dataSet, names = c("gender", "treatment", "replicat
 #'
 #' @export
 
-impute.nuc_norm <- function(dataSet, names = c("gender", "treatment", "replicate"),
+impute.nuc_norm <- function(dataSet,
                             rank.max = NULL, lambda = NULL, thresh = 1e-05, maxit = 100,
                             final.svd = TRUE, seed = 362436069) {
 
+  attrnames <- attributes(dataSet)$attrnames
+
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## replace NAs using nuclear-norm regularization
   if(is.null(rank.max)) {
@@ -324,7 +319,8 @@ impute.nuc_norm <- function(dataSet, names = c("gender", "treatment", "replicate
   dataPoints <- t(softImpute::complete(t(dataPoints), fit))
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
@@ -341,9 +337,6 @@ impute.nuc_norm <- function(dataSet, names = c("gender", "treatment", "replicate
 #'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
-#'
 #' @param m An integer (default = 5) specifying the number of multiple imputations.
 #'
 #' @param seed An integer (default = 362436069) specifying the seed used for the random
@@ -359,18 +352,20 @@ impute.nuc_norm <- function(dataSet, names = c("gender", "treatment", "replicate
 #'
 #' @export
 
-impute.mice_norm <- function(dataSet, names = c("gender", "treatment", "replicate"),
-                             m = 5, seed = 362436069) {
+impute.mice_norm <- function(dataSet, m = 5, seed = 362436069) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## replace NAs using Bayesian linear regression
   dataPoints <- mice::mice(dataPoints, m = m, seed = seed, method = "norm", printFlag = FALSE)
   dataPoints <- Reduce(`+`, mice::complete(dataPoints, "all")) / m
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
@@ -387,9 +382,6 @@ impute.mice_norm <- function(dataSet, names = c("gender", "treatment", "replicat
 #'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
-#'
 #' @param m An integer (default = 5) specifying the number of multiple imputations.
 #'
 #' @param seed An integer (default = 362436069) specifying the seed used for the random
@@ -405,18 +397,20 @@ impute.mice_norm <- function(dataSet, names = c("gender", "treatment", "replicat
 #'
 #' @export
 
-impute.mice_cart <- function(dataSet, names = c("gender", "treatment", "replicate"),
-                             m = 5, seed = 362436069) {
+impute.mice_cart <- function(dataSet, m = 5, seed = 362436069) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## replace NAs using classification and regression trees
   dataPoints <- mice::mice(dataPoints, m = m, seed = seed, method = "cart", printFlag = FALSE)
   dataPoints <- Reduce(`+`, mice::complete(dataPoints, "all")) / m
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
@@ -432,9 +426,6 @@ impute.mice_cart <- function(dataSet, names = c("gender", "treatment", "replicat
 #' \insertCite{oba2003bayesian}{metastat}.
 #'
 #' @param dataSet A data frame containing the data signals.
-#'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
 #'
 #' @param nPcs An integer specifying the number of principal components to calculate. The
 #' default is set to the minimum between the number of samples and the number of proteins.
@@ -452,11 +443,12 @@ impute.mice_cart <- function(dataSet, names = c("gender", "treatment", "replicat
 #'
 #' @export
 
-impute.pca_bayes <- function(dataSet, names = c("gender", "treatment", "replicate"),
-                             nPcs = NULL, maxSteps = 100) {
+impute.pca_bayes <- function(dataSet, nPcs = NULL, maxSteps = 100) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## replace NAs using Bayesian principal components analysis
   dataPoints <- pcaMethods::pca(dataPoints, method = "bpca", verbose = FALSE,
@@ -465,7 +457,8 @@ impute.pca_bayes <- function(dataSet, names = c("gender", "treatment", "replicat
   dataPoints <- pcaMethods::completeObs(dataPoints)
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
@@ -481,9 +474,6 @@ impute.pca_bayes <- function(dataSet, names = c("gender", "treatment", "replicat
 #' \insertCite{stacklies2007pcamethods}{metastat}.
 #'
 #' @param dataSet A data frame containing the data signals.
-#'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
 #'
 #' @param nPcs An integer specifying the number of principal components to calculate. The
 #' default is set to the minimum between the number of samples and the number of proteins.
@@ -504,11 +494,12 @@ impute.pca_bayes <- function(dataSet, names = c("gender", "treatment", "replicat
 #'
 #' @export
 
-impute.pca_prob <- function(dataSet, names = c("gender", "treatment", "replicate"),
-                            nPcs = NULL, maxIterations = 1000, seed = 362436069) {
+impute.pca_prob <- function(dataSet, nPcs = NULL, maxIterations = 1000, seed = 362436069) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## replace NAs using Bayesian principal components analysis
   dataPoints <- pcaMethods::pca(dataPoints, method = "ppca", verbose = FALSE,
@@ -517,9 +508,9 @@ impute.pca_prob <- function(dataSet, names = c("gender", "treatment", "replicate
   dataPoints <- pcaMethods::completeObs(dataPoints)
 
   ## recombine the labels and imputed data
-  imputedData <- cbind(dataSet[,names], dataPoints)
+  imputedData <- cbind(dataSet[,attrnames], dataPoints)
+  attributes(imputedData)$attrnames <- attrnames
 
   ## return the imputed data
   return(imputedData)
 }
-

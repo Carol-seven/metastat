@@ -7,7 +7,7 @@
 preprocess(
   fileName,
   dataSet = NULL,
-  names = c("gender", "treatment", "replicate")
+  attrnames = c("gender", "treatment", "replicate")
 )
 }
 \arguments{
@@ -16,7 +16,7 @@ path to the file, if needed).}
 
 \item{dataSet}{The raw data set, if already loaded in R.}
 
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
+\item{attrnames}{A vector of strings (default = c("gender", "treatment", "replicate"))
 specifying the names of the attribute columns.}
 }
 \value{

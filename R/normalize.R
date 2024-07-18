@@ -6,9 +6,6 @@
 #'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
-#'
 #' @param method A string (default = "quant") specifying the method of normalization to
 #' apply:
 #' \enumerate{
@@ -39,23 +36,23 @@
 #' @import ggplot2
 #' @importFrom limma normalizeQuantiles
 #'
-#' @returns A normalized 2d dataframe.
+#' @return The normalized data.
 #'
 #' @autoglobal
 #'
 #' @export
 
-normalize <- function(dataSet,
-                      names = c("gender", "treatment", "replicate"),
-                      method = "quant") {
+normalize <- function(dataSet, method = "quant") {
 
   ## create a boxplot for pre-normalization
-  plot <- normPlot(dataSet = dataSet, names = names) +
+  plot <- normPlot(dataSet = dataSet) +
     ggtitle("Pre-Normalization Boxplot")
   print(plot)
 
+  attrnames <- attributes(dataSet)$attrnames
+
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   if (method == "mean") {
     ## mean centering
@@ -124,7 +121,8 @@ normalize <- function(dataSet,
   }
 
   ## recombine the labels and transformed data into a single data frame
-  normDataSet <- cbind(dataSet[,names], normDataPoints)
+  normDataSet <- cbind(dataSet[,attrnames], normDataPoints)
+  attributes(normDataSet)$attrnames <- attrnames
 
   ## create a boxplot for post-normalization
   plot <- normPlot(normDataSet) +

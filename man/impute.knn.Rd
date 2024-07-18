@@ -6,7 +6,6 @@
 \usage{
 impute.knn(
   dataSet,
-  names = c("gender", "treatment", "replicate"),
   k = 10,
   rowmax = 0.5,
   colmax = 0.8,
@@ -16,9 +15,6 @@ impute.knn(
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 
 \item{k}{An integer (default = 10) indicating the number of neighbors to be used in the
 imputation.}

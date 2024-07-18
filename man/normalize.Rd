@@ -4,17 +4,10 @@
 \alias{normalize}
 \title{Normalization}
 \usage{
-normalize(
-  dataSet,
-  names = c("gender", "treatment", "replicate"),
-  method = "quant"
-)
+normalize(dataSet, method = "quant")
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 
 \item{method}{A string (default = "quant") specifying the method of normalization to
 apply:
@@ -37,7 +30,7 @@ apply:
 }}
 }
 \value{
-A normalized 2d dataframe.
+The normalized data.
 }
 \description{
 Apply a specified type of normalization to the data.

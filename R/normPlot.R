@@ -6,9 +6,6 @@
 #'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
-#'
 #' @import ggplot2
 #'
 #' @returns An object of class \code{plot}.
@@ -17,12 +14,13 @@
 #'
 #' @noRd
 
-normPlot <- function(dataSet,
-                     names = c("gender", "treatment", "replicate")) {
+normPlot <- function(dataSet) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   plotData <- dataSet %>%
-    pivot_longer(-names) %>%
-    unite("attribute", names[-length(names)], sep = "-", remove = FALSE)
+    pivot_longer(-attrnames) %>%
+    unite("attribute", attrnames[attrnames != "replicate"], sep = "-", remove = FALSE)
 
   ggplot(plotData, aes(x = attribute, y = value,
                        fill = if (length(unique(replicate)) == 1) attribute else replicate)) +

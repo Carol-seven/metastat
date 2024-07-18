@@ -4,18 +4,10 @@
 \alias{impute.pca_bayes}
 \title{Imputation by Bayesian principal components analysis}
 \usage{
-impute.pca_bayes(
-  dataSet,
-  names = c("gender", "treatment", "replicate"),
-  nPcs = NULL,
-  maxSteps = 100
-)
+impute.pca_bayes(dataSet, nPcs = NULL, maxSteps = 100)
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 
 \item{nPcs}{An integer specifying the number of principal components to calculate. The
 default is set to the minimum between the number of samples and the number of proteins.}

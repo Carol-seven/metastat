@@ -4,18 +4,10 @@
 \alias{impute.mice_norm}
 \title{Imputation by Bayesian linear regression}
 \usage{
-impute.mice_norm(
-  dataSet,
-  names = c("gender", "treatment", "replicate"),
-  m = 5,
-  seed = 362436069
-)
+impute.mice_norm(dataSet, m = 5, seed = 362436069)
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 
 \item{m}{An integer (default = 5) specifying the number of multiple imputations.}
 

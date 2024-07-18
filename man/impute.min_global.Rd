@@ -4,13 +4,10 @@
 \alias{impute.min_global}
 \title{Imputation by the global minimum}
 \usage{
-impute.min_global(dataSet, names = c("gender", "treatment", "replicate"))
+impute.min_global(dataSet)
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 }
 \value{
 The imputed data.

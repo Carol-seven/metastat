@@ -6,7 +6,6 @@
 \usage{
 impute.nuc_norm(
   dataSet,
-  names = c("gender", "treatment", "replicate"),
   rank.max = NULL,
   lambda = NULL,
   thresh = 1e-05,
@@ -17,9 +16,6 @@ impute.nuc_norm(
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 
 \item{rank.max}{An integer specifying the restriction on the rank of the solution. The
 default is set to one less than the minimum dimension of the dataset.}

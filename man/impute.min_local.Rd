@@ -4,17 +4,10 @@
 \alias{impute.min_local}
 \title{Imputation by the local minimum}
 \usage{
-impute.min_local(
-  dataSet,
-  names = c("gender", "treatment", "replicate"),
-  reqPercentPresent = 0.51
-)
+impute.min_local(dataSet, reqPercentPresent = 0.51)
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
-
-\item{names}{A vector of strings (default = c("gender", "treatment", "replicate"))
-specifying the names of the attribute columns.}
 
 \item{reqPercentPresent}{A scalar (default = 0.51) specifying the required percent of
 values that must be present in a given compound by condition combination for values to

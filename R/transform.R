@@ -6,9 +6,6 @@
 #'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param names A vector of strings (default = c("gender", "treatment", "replicate"))
-#' specifying the names of the attribute columns.
-#'
 #' @param method A string (default = "log") specifying the method to be used for the
 #' transformation:
 #' \enumerate{
@@ -31,16 +28,16 @@
 #' \item Plots the mean-variance relationship again for comparison.
 #' }
 #'
-#' @returns The transformed data.
+#' @return The transformed data.
 #'
 #' @export
 
-transform <- function(dataSet,
-                      names = c("gender", "treatment", "replicate"),
-                      method = "log", logFold = 2, root = 2) {
+transform <- function(dataSet, method = "log", logFold = 2, root = 2) {
+
+  attrnames <- attributes(dataSet)$attrnames
 
   ## organize the data for transformation
-  dataPoints <- select(dataSet, -any_of(names))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## calculate and plot a mean-variance plot
   plotPre <- meanVarPlot(dataPoints, title = "Pre-Transformation")
@@ -58,7 +55,8 @@ transform <- function(dataSet,
   print(plotPost)
 
   ## recombine the labels and transformed data into a single data frame
-  transDataSet <- cbind(dataSet[,names], transDataPoints)
+  transDataSet <- cbind(dataSet[,attrnames], transDataPoints)
+  attributes(transDataSet)$attrnames <- attrnames
 
   ## return the transformed data
   return(transDataSet)
