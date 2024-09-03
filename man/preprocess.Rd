@@ -7,7 +7,8 @@
 preprocess(
   fileName,
   dataSet = NULL,
-  attrnames = c("gender", "treatment", "replicate")
+  attrnames = c("gender", "treatment", "replicate"),
+  zeroNA = TRUE
 )
 }
 \arguments{
@@ -18,6 +19,9 @@ path to the file, if needed).}
 
 \item{attrnames}{A vector of strings (default = c("gender", "treatment", "replicate"))
 specifying the names of the attribute columns.}
+
+\item{zeroNA}{A boolean (default = TRUE) specifying whether 0's should be converted to
+NA's.}
 }
 \value{
 A 2d dataframe.

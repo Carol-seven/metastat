@@ -9,21 +9,24 @@
 #' @param method A string (default = "quant") specifying the method of normalization to
 #' apply:
 #' \enumerate{
-#' \item Centering:
+#' \item Row-wise (sample-wise) normalization:
 #' \itemize{
-#' \item "mean": Mean centering.
-#' \item "median": Median centering.
+#' \item "mean": Samples are normalized to the mean value of all variables for a given
+#' sample.
+#' \item "median": samples are normalized to the median value of all variables for a given
+#' sample.
+#' \item "quantile": Quantile normalization.
 #' }
-#' \item Scaling:
+#' \item Column-wise (metabolite-wise) normalization:
 #' \itemize{
+#' \item "meanCtr": Mean centering.
+#' \item "medianCtr": Median centering.
 #' \item "auto": Auto scaling.
 #' \item "level": Level scaling.
 #' \item "pareto": Pareto scaling.
 #' \item "range": Range scaling.
 #' \item "vast": Vast scaling.
 #' }
-#' \item "quant": Quantile normalization.
-#' \item "none": None.
 #' }
 #'
 #' @details
@@ -42,7 +45,7 @@
 #'
 #' @export
 
-normalize <- function(dataSet, method = "quant") {
+normalize <- function(dataSet, method = "quantile") {
 
   ## create a boxplot for pre-normalization
   plot <- normPlot(dataSet = dataSet) +
@@ -52,14 +55,16 @@ normalize <- function(dataSet, method = "quant") {
   attrnames <- attributes(dataSet)$attrnames
 
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(attrnames))
+  dataPoints <- select(dataSet, -all_of(attrnames))
 
-  if (method == "mean") {
+  if (method == "meanCtr") {
+
     ## mean centering
     ## subtract the average intensity of each compound from every value for that compound
     normDataPoints <- base::scale(dataPoints, center = TRUE, scale = FALSE)
 
-  } else if (method == "median") {
+  } else if (method == "medianCtr") {
+
     ## median centering
     ## subtract the median intensity of each compound from every value for that compound
     normDataPoints <- base::scale(dataPoints,
@@ -80,7 +85,7 @@ normalize <- function(dataSet, method = "quant") {
   } else if (method == "pareto") {
 
     ## Pareto scaling
-    sigma <- apply(scale(dataPoints, center = TRUE, scale = FALSE), 2, function(col) {
+    sigma <- apply(base::scale(dataPoints, center = TRUE, scale = FALSE), 2, function(col) {
       col <- col[!is.na(col)]
       sqrt(sum(col^2) / max(1L, length(col)-1L))
     })
@@ -100,24 +105,29 @@ normalize <- function(dataSet, method = "quant") {
 
     ## vast scaling
     mu <- colMeans(dataPoints, na.rm = TRUE)
-    sigma <- apply(scale(dataPoints, center = TRUE, scale = FALSE), 2, function(col) {
+    sigma <- apply(base::scale(dataPoints, center = TRUE, scale = FALSE), 2, function(col) {
       col <- col[!is.na(col)]
       sqrt(sum(col^2) / max(1L, length(col)-1L))
     })
-    normDataPoints <- scale(dataPoints, center = TRUE, scale = sigma^2/mu)
+    normDataPoints <- base::scale(dataPoints, center = TRUE, scale = sigma^2/mu)
 
-  } else if (method == "quant") {
+  } else if (method == "mean") {
+
+    ## normalization by mean
+    normDataPoints <- base::scale(t(dataPoints), center = TRUE, scale = FALSE)
+
+  } else if (method == "median") {
+
+    ## normalization by median
+    normDataPoints <- base::scale(t(dataPoints),
+                                  center = apply(dataPoints, 1, median, na.rm = TRUE),
+                                  scale = FALSE)
+
+  } else if (method == "quantile") {
 
     ## quantile normalization
-    normDataPoints <- limma::normalizeQuantiles(dataPoints)
+    normDataPoints <- t(limma::normalizeQuantiles(t(dataPoints)))
 
-  } else if (method == "none") {
-    ## throws a warning for missing normalization, which may introduce errors
-    warning("You are currently choosing NOT to normalize your data.
-            This is heavily discouraged in most scientific work.
-            Please be confident this is the correct choice.")
-
-    normDataPoints <- dataPoints
   }
 
   ## recombine the labels and transformed data into a single data frame

@@ -106,7 +106,6 @@ filterOutIn <- function(dataSet,
 #' If compounds that do not meet the imputation requirement are removed, a .csv file is
 #' created with the removed data.
 #'
-#' @import dplyr
 #' @importFrom utils write.csv
 #'
 #' @return The filtered data.
@@ -117,18 +116,19 @@ filterNA <- function(dataSet, saveRm = TRUE) {
 
   attrnames <- attributes(dataSet)$attrnames
 
+  NAcols <- sapply(dataSet, anyNA)
+
   if (saveRm) {
 
     ## create a dataframe of the removed data
-    removedData <- bind_cols(select(dataSet, attrnames),
-                             select_if(dataSet, ~any(is.na(.))))
+    removedData <- cbind(dataSet[, attrnames], dataSet[, NAcols])
 
     ## save removed data to current working directory
     write.csv(removedData, file = "filtered_NA_data.csv", row.names = FALSE)
   }
 
   ## remove all of the contaminants if they are present
-  filteredData <- dataSet %>% select_if(~!any(is.na(.)))
+  filteredData <- dataSet[, !NAcols]
   attributes(filteredData)$attrnames <- attrnames
 
   ## return the filtered data

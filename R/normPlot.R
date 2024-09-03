@@ -19,16 +19,16 @@ normPlot <- function(dataSet) {
   attrnames <- attributes(dataSet)$attrnames
 
   plotData <- dataSet %>%
-    pivot_longer(-attrnames) %>%
-    unite("attribute", attrnames[attrnames != "replicate"], sep = "-", remove = FALSE)
+    pivot_longer(-all_of(attrnames))
+    # unite("attribute", attrnames[attrnames != "replicate"], sep = "-", remove = FALSE)
 
-  ggplot(plotData, aes(x = attribute, y = value,
+  ggplot(plotData, aes(x = merged_condition, y = value,
                        fill = if (length(unique(replicate)) == 1) attribute else replicate)) +
     geom_boxplot(varwidth = TRUE) +
     guides(fill = guide_legend(
-      title = ifelse(length(unique(plotData$replicate)) == 1, "Attribute", "Replicate"))) +
+      title = ifelse(length(unique(plotData$replicate)) == 1, "Condition", "Replicate"))) +
     labs(title = "Normalization Boxplot") +
-    xlab("Attribute") +
+    xlab("Condition") +
     ylab("Signal value") +
     scale_fill_brewer(palette = "RdYlBu") +
     theme_bw() +

@@ -58,14 +58,11 @@ impute.min_local <- function(dataSet, reqPercentPresent = 0.51) {
 
   attrnames <- attributes(dataSet)$attrnames
 
-  dataSet <- dataSet %>%
-    unite("condition", all_of(setdiff(attrnames, "replicate")), sep = "_", remove = FALSE)
-
   ## select the numerical data
-  dataPoints <- select(dataSet, -any_of(c(attrnames, "condition")))
+  dataPoints <- select(dataSet, -any_of(attrnames))
 
   ## create a frequency table for conditions
-  frq <- count(dataSet, condition)
+  frq <- count(dataSet, merged_condition)
 
   ## loop over compounds
   ## ncol(dataPoints): number of compound in the data

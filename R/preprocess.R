@@ -12,6 +12,9 @@
 #' @param attrnames A vector of strings (default = c("gender", "treatment", "replicate"))
 #' specifying the names of the attribute columns.
 #'
+#' @param zeroNA A boolean (default = TRUE) specifying whether 0's should be converted to
+#' NA's.
+#'
 #' @details
 #' The function executes the following:
 #' \enumerate{
@@ -24,6 +27,7 @@
 #'
 #' @import dplyr
 #' @import ggplot2
+#' @import tibble
 #' @import tidyr
 #' @importFrom utils read.csv
 #'
@@ -34,7 +38,8 @@
 #' @export
 
 preprocess <- function(fileName, dataSet = NULL,
-                       attrnames = c("gender", "treatment", "replicate")) {
+                       attrnames = c("gender", "treatment", "replicate"),
+                       zeroNA = TRUE) {
   if (missing(fileName)) {
     if (is.null(dataSet)) {
       stop("Either 'fileName' or 'dataSet' must be provided.")
@@ -44,20 +49,23 @@ preprocess <- function(fileName, dataSet = NULL,
     dataSet <- read.csv(fileName)
   }
 
-  ## long dataSet table
-  dataSet.l <- dataSet %>%
-    pivot_longer(cols = -Compound) %>%
-    mutate(value = ifelse(value == 0, NA, value))
+  dataPoints <- t(select(dataSet, -Compound))
+
+  if (zeroNA) {
+    dataPoints[dataPoints == 0] <- NA
+  }
+
+  colnames(dataPoints) <- dataSet$Compound
 
   ## reformatted data
-  result <- dataSet.l %>%
-    pivot_wider(id_cols = name, names_from = Compound, values_from = value) %>%
+  result <- as.data.frame(dataPoints) %>%
+    rownames_to_column("name") %>%
     separate(name, into = attrnames, sep = "_") %>%
-    mutate(replicate = factor(replicate, levels = sort(as.numeric(unique(replicate))))) %>%
-    as.data.frame()
+    unite("merged_condition", all_of(setdiff(attrnames, "replicate")), sep = "_", remove = FALSE) %>%
+    mutate(replicate = factor(replicate, levels = sort(as.numeric(unique(replicate)))))
 
   ## generate a histogram of the log2-transformed values for full raw data set
-  value <- data.frame(value = log2(dataSet.l$value))
+  value <- data.frame(value = as.vector(log2(dataPoints)))
   plot <- ggplot(value) +
     geom_histogram(aes(x = value),
                    binwidth = 2,
@@ -84,7 +92,7 @@ preprocess <- function(fileName, dataSet = NULL,
   }
   cat("\n")
 
-  attr(result, "attrnames") <- attrnames
+  attr(result, "attrnames") <- c("merged_condition", attrnames)
 
   return(result)
 }

@@ -4,7 +4,7 @@
 \alias{normalize}
 \title{Normalization}
 \usage{
-normalize(dataSet, method = "quant")
+normalize(dataSet, method = "quantile")
 }
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
@@ -12,21 +12,24 @@ normalize(dataSet, method = "quant")
 \item{method}{A string (default = "quant") specifying the method of normalization to
 apply:
 \enumerate{
-\item Centering:
+\item Row-wise (sample-wise) normalization:
 \itemize{
-\item "mean": Mean centering.
-\item "median": Median centering.
+\item "mean": Samples are normalized to the mean value of all variables for a given
+sample.
+\item "median": samples are normalized to the median value of all variables for a given
+sample.
+\item "quantile": Quantile normalization.
 }
-\item Scaling:
+\item Column-wise (metabolite-wise) normalization:
 \itemize{
+\item "meanCtr": Mean centering.
+\item "medianCtr": Median centering.
 \item "auto": Auto scaling.
 \item "level": Level scaling.
 \item "pareto": Pareto scaling.
 \item "range": Range scaling.
 \item "vast": Vast scaling.
 }
-\item "quant": Quantile normalization.
-\item "none": None.
 }}
 }
 \value{
