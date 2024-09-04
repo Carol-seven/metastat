@@ -82,7 +82,7 @@ preprocess <- function(fileName, dataSet = NULL,
 
   ## print summary statistics for full raw data set
   cat("\nSummary of Full Data Signals (Raw):\n")
-  print(summary(dataSet.l$value))
+  print(summary(value$value))
   cat("\n")
 
   ## print levels of attributes

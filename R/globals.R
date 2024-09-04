@@ -9,6 +9,5 @@ utils::globalVariables(c(
   "attribute", # <normPlot>
   "Compound", # <preprocess>
   "name", # <preprocess>
-  "dataSet.l", # <preprocess>
   NULL
 ))

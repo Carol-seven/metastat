@@ -1,16 +1,24 @@
 #'
 #' Student's t-test
 #'
+#' @description
+#' Apply Student's t-test to the data.
+#'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param condCol A string (default = "merged_condition") specifying the column name in \code{dataSet} that contains
-#' the conditions to compared.
+#' @param condCol A string (default = "merged_condition") specifying the column name in
+#' \code{dataSet} that contains the conditions to compared.
 #'
 #' @param cond A string specifying which two conditions to compare. The order is
 #' important, as the second condition serves as the reference for comparison. When there
 #' are two conditions in \code{condCol} of \code{dataSet} and this argument is not
 #' specified, the \code{cond} will automatically be selected by sorting the unique
 #' values alphabetically and in ascending order.
+#'
+#' @details
+#' The second condition serves as the reference for comparison. The differences are
+#' calculated by subtracting the mean of the second condition from the mean of the first
+#' condition (Condition 1 - Condition 2).
 #'
 #' @import dplyr
 #' @importFrom stats t.test
@@ -68,10 +76,13 @@ t_test <- function(dataSet, condCol = "merged_condition", cond) {
 #'
 #' Moderated t-test
 #'
+#' @description
+#' Apply moderated t-test \insertCite{smyth2004linear}{metastat} to the data.
+#'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param condCol A string (default = "merged_condition") specifying the column name in \code{dataSet} that contains
-#' the conditions to compared.
+#' @param condCol A string (default = "merged_condition") specifying the column name in
+#' \code{dataSet} that contains the conditions to compared.
 #'
 #' @param cond A string specifying which two conditions to compare. The order is
 #' important, as the second condition serves as the reference for comparison. When there
@@ -79,11 +90,19 @@ t_test <- function(dataSet, condCol = "merged_condition", cond) {
 #' specified, the \code{cond} will automatically be selected by sorting the unique
 #' values alphabetically and in ascending order.
 #'
+#' @details
+#' The second condition serves as the reference for comparison. The differences are
+#' calculated by subtracting the mean of the second condition from the mean of the first
+#' condition (Condition 1 - Condition 2).
+#'
 #' @import dplyr
 #' @importFrom stats model.matrix
 #'
 #' @returns A data frame containing the differences in means and p-values for each
 #' compound between the two conditions.
+#'
+#' @references
+#' \insertAllCited{}
 #'
 #' @export
 
@@ -133,16 +152,24 @@ mod_t_test <- function(dataSet, condCol = "merged_condition", cond) {
 #'
 #' Wilcoxon signed-rank test
 #'
+#' @description
+#' Apply Wilcoxon test to the data.
+#'
 #' @param dataSet A data frame containing the data signals.
 #'
-#' @param condCol A string (default = "merged_condition") specifying the column name in \code{dataSet} that contains
-#' the conditions to compared.
+#' @param condCol A string (default = "merged_condition") specifying the column name in
+#' \code{dataSet} that contains the conditions to compared.
 #'
 #' @param cond A string specifying which two conditions to compare. The order is
 #' important, as the second condition serves as the reference for comparison. When there
 #' are two conditions in \code{condCol} of \code{dataSet} and this argument is not
 #' specified, the \code{cond} will automatically be selected by sorting the unique
 #' values alphabetically and in ascending order.
+#'
+#' @details
+#' The second condition serves as the reference for comparison. The differences are
+#' calculated by subtracting the mean of the second condition from the mean of the first
+#' condition (Condition 1 - Condition 2).
 #'
 #' @import dplyr
 #' @importFrom stats wilcox.test
@@ -195,3 +222,67 @@ wilcox_test <- function(dataSet, condCol = "merged_condition", cond) {
 
 }
 
+
+##----------------------------------------------------------------------------------------
+#'
+#' The input for MA plot
+#'
+#' @description
+#' Calculate the input for generating an MA plot.
+#'
+#' @param dataSet A data frame containing the data signals.
+#'
+#' @param condCol A string (default = "merged_condition") specifying the column name in
+#' \code{dataSet} that contains the conditions to compared.
+#'
+#' @param cond A string specifying which two conditions to compare. The order is
+#' important, as the second condition serves as the reference for comparison. When there
+#' are two conditions in \code{condCol} of \code{dataSet} and this argument is not
+#' specified, the \code{cond} will automatically be selected by sorting the unique
+#' values alphabetically and in ascending order.
+#'
+#' @details
+#' The second condition serves as the reference for comparison. The rows are ordered by
+#' \code{cond}. Specifically, the first row corresponds to the compound-wise average of
+#' the first condition, and the second row corresponds to the second condition.
+#'
+#' @import dplyr
+#'
+#' @returns A data frame containing the compound-wise averages within each condition.
+#'
+#' @export
+
+ma <- function(dataSet, condCol = "merged_condition", cond) {
+
+  ## check for exactly two conditions
+  if (missing(cond)) {
+    cond <- sort(unique(dataSet[[condCol]]))
+    if (length(cond) != 2) {
+      stop("Please provide exactly two conditions for comparison.")
+    }
+  } else if (length(cond) != 2) {
+    stop("This analysis can only be performed on two conditions at a time.
+         Please select exactly two conditions to compare.
+         Alternatively, please consider using ANOVA.")
+  }
+
+  ## filter data set by the conditions
+  filteredData <- dataSet %>%
+    filter(.data[[condCol]] %in% cond)
+
+  ## index of the two conditions
+  indexA <- which(filteredData[[condCol]] == cond[1])
+  indexB <- which(filteredData[[condCol]] == cond[2])
+
+  ## the average of each condition individually
+  result <- as.data.frame(apply(
+    select(filteredData, -any_of(attributes(dataSet)$attrnames)), 2,
+    function(x) {
+      c(mean(x[indexA]), mean(x[indexB]))
+    }
+  ))
+  rownames(result) <- cond
+
+  return(result)
+
+}

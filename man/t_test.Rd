@@ -9,8 +9,8 @@ t_test(dataSet, condCol = "merged_condition", cond)
 \arguments{
 \item{dataSet}{A data frame containing the data signals.}
 
-\item{condCol}{A string (default = "merged_condition") specifying the column name in \code{dataSet} that contains
-the conditions to compared.}
+\item{condCol}{A string (default = "merged_condition") specifying the column name in
+\code{dataSet} that contains the conditions to compared.}
 
 \item{cond}{A string specifying which two conditions to compare. The order is
 important, as the second condition serves as the reference for comparison. When there
@@ -23,5 +23,10 @@ A data frame containing the differences in means and p-values for each
 compound between the two conditions.
 }
 \description{
-Student's t-test
+Apply Student's t-test to the data.
+}
+\details{
+The second condition serves as the reference for comparison. The differences are
+calculated by subtracting the mean of the second condition from the mean of the first
+condition (Condition 1 - Condition 2).
 }
